@@ -6,9 +6,9 @@ fs.readdir(thispath, (err, files) => {
     fs.stat(path.join(thispath, item), (err, files) => {
       if (files.isFile()) {
         console.log(
-          `\n< Имя файла: ${item.split('.')[0]} >-< Расширение файла: ${
-            item.split('.')[1]
-          } >-< Вес файла: ${files['size']} >`,
+          `\n< Имя файла: ${item.split('.')[0]} >-< Расширение файла: ${item
+            .split('.')
+            .slice(-1)} >-< Вес файла: ${files['size']} >`,
         );
       }
     });
