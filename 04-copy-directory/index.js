@@ -1,26 +1,40 @@
 const fs = require('fs');
 const path = require('path');
 
-const thispath = path.join(__dirname, 'files');
+const thisPath = path.join(__dirname, 'files');
 const copyPath = path.join(__dirname, 'files-copy');
 
-fs.stat(copyPath, (err) => {
+// создание папки.
+fs.mkdir(copyPath, { recursive: true }, (err) => {
   if (err) {
-    fs.mkdir('./04-copy-directory/files-copy', (err) => err);
-  } else {
-    fs.rmdir('./04-copy-directory/files-copy', (err) => err);
-    fs.mkdir('./04-copy-directory/files-copy', (err) => err);
+    console.error(err);
+    return;
   }
 });
 
-fs.readdir(thispath, (err, files) => {
-  for (let item of files) {
-    fs.copyFile(
-      `./04-copy-directory/files/${item}`,
-      `./04-copy-directory/files-copy/${item}`,
-      (err) => {
-        if (err) throw err;
-      },
-    );
-  }
+fs.readdir(copyPath, function (err, files) {
+  //очистка
+  files.forEach((file) => {
+    fs.unlink(path.join(copyPath, file), (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    });
+  });
+  //копирование
+  fs.readdir(thisPath, function (err, files) {
+    files.forEach((file) => {
+      fs.copyFile(
+        path.resolve(thisPath, file),
+        path.resolve(copyPath, file),
+        (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        },
+      );
+    });
+  });
 });
